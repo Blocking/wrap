@@ -1,4 +1,4 @@
-package com.example.wrap.DesignPatterns.策略模式2;
+package com.example.wrap.DesignPatterns.two;
 
 import java.io.IOException;
 import java.io.OutputStream;
