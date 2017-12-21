@@ -97,7 +97,66 @@ public class ExecutorsT {
         Future<Boolean> fu = completionService.take();
         System.out.println(fu.get());
     }
-    public void use2(){
+    @Test
+    public void use2() throws ExecutionException, InterruptedException {
+        CompletableFuture<Void> mm = CompletableFuture.runAsync(()->{
+            System.out.println("123456");
+        },executorService);
+        mm.get();
 
     }
+    @Test
+    public void use3() throws ExecutionException, InterruptedException {
+        CompletableFuture<String> future = CompletableFuture.supplyAsync(() -> {
+            try {
+                TimeUnit.SECONDS.sleep(2);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            return "result";
+        });
+        String result = future.get();
+        System.out.println(result);
+    }
+    @Test
+    public void use4() throws ExecutionException, InterruptedException {
+        CompletableFuture<String> ss = CompletableFuture.supplyAsync(() -> {
+            try {
+                TimeUnit.SECONDS.sleep(1);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            return "tom";
+        });
+        //thenApply 是接收未来返回的结果 然后根据结果进行之后的一系列处理
+        // 而像 thenApply() 和 thenRun()方法则是在未来完成后 只是单纯的在未来完成后做一些操作 不会返回回调结果
+        //thenApply 回调方法 会在上个future执行完成后进行 处理、转换 并返回 回调结果
+        //当然这个 thenApply方法是可以连续调用的 所以你可以有一系列处理
+        CompletableFuture<String> greetingFuture = ss.thenApply(s -> {return "hello "+s;});
+        System.out.println(greetingFuture.get());
+    }
+    @Test
+    public void use5(){
+        // thenAccept() example 可以接受future返回的结果 但是不会返回自己的回调结果 是Void
+        CompletableFuture<Void> accept =  CompletableFuture.supplyAsync(() -> {
+            return getDetail();
+        }).thenAccept(product -> {
+            System.out.println("Got product detail from remote service " );
+        });
+    }
+    @Test
+    public void use6(){
+        // thenRun() example 不能接受future返回的结果 而且不会返回自己的回调结果 是Void
+        CompletableFuture.supplyAsync(() -> {
+            return getDetail();
+        }).thenRun(() -> {
+            System.out.println("Got product detail from remote service " );
+        });
+    }
+
+    private boolean getDetail() {
+        System.out.println("detail-------");
+        return true;
+    }
+
 }
