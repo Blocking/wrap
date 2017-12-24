@@ -3,6 +3,7 @@ package com.example.wrap.concurrent.executor;
  * Created by E0441 on 2017/12/5.
  */
 
+import com.example.wrap.JDK8.entity.User;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import org.apache.commons.lang3.concurrent.BasicThreadFactory;
 import org.junit.Test;
@@ -59,6 +60,7 @@ public class ExecutorsT {
     ScheduledExecutorService executorService = new ScheduledThreadPoolExecutor(1,
         new BasicThreadFactory.Builder().namingPattern("example-schedule-pool-%d").daemon(true).build());
 
+    @Test
     public void sample1() throws ExecutionException, InterruptedException {
         final Callable<Boolean> task = ()->{
             System.out.println("123");
@@ -67,6 +69,7 @@ public class ExecutorsT {
 		Future<Boolean> is  = executorService.submit(task);
         System.out.println(is.get());
     }
+    @Test
     public void sample2(){
         ThreadFactory namedThreadFactory = new ThreadFactoryBuilder()
                 .setNameFormat("demo-pool-%d").build();
@@ -132,18 +135,29 @@ public class ExecutorsT {
         // 而像 thenApply() 和 thenRun()方法则是在未来完成后 只是单纯的在未来完成后做一些操作 不会返回回调结果
         //thenApply 回调方法 会在上个future执行完成后进行 处理、转换 并返回 回调结果
         //当然这个 thenApply方法是可以连续调用的 所以你可以有一系列处理
+        //同时这些方法都是默认执行在fork-join池中的  当然也提供了重载的方法 方便使用自己的线程池
         CompletableFuture<String> greetingFuture = ss.thenApply(s -> {return "hello "+s;});
         System.out.println(greetingFuture.get());
     }
+
+    /**
+     * thenAccept()方法以及thenRun()方法通常都是作为一个未来最后的处理
+     * 只不过一个是可以接受未来的结果 一个不接受未来的结果
+     * 同时这些方法都是默认执行在fork-join池中的  当然也提供了重载的方法 方便使用自己的线程池
+     */
     @Test
     public void use5(){
         // thenAccept() example 可以接受future返回的结果 但是不会返回自己的回调结果 是Void
         CompletableFuture<Void> accept =  CompletableFuture.supplyAsync(() -> {
             return getDetail();
-        }).thenAccept(product -> {
+        }).thenAccept(product -> {//此时通常会调用主线程执行 thenAccept方法 存在重载方法thenAcceptAsync() 在fork-join池中执行 还可以使用自己定义的线程池
             System.out.println("Got product detail from remote service " );
         });
     }
+
+    /**
+     * 同上
+     */
     @Test
     public void use6(){
         // thenRun() example 不能接受future返回的结果 而且不会返回自己的回调结果 是Void
@@ -158,5 +172,11 @@ public class ExecutorsT {
         System.out.println("detail-------");
         return true;
     }
+
+
+
+
+
+
 
 }
