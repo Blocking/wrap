@@ -6,7 +6,7 @@ import com.google.gson.annotations.SerializedName;
 
 @Generated("net.hexar.json2pojo")
 @SuppressWarnings("unused")
-public class Datum {
+public class List {
 
     @SerializedName("audiences")
     private Long mAudiences;
@@ -14,12 +14,12 @@ public class Datum {
     private Double mBoxOffice;
     @SerializedName("boxOfficeNoService")
     private Double mBoxOfficeNoService;
+    @SerializedName("filmCode")
+    private String mFilmCode;
     @SerializedName("filmIntroductionId")
     private Long mFilmIntroductionId;
     @SerializedName("filmName")
     private String mFilmName;
-    @SerializedName("list")
-    private java.util.List<com.example.wrap.company.weChart.films.List> mList;
     @SerializedName("localAudiences")
     private Long mLocalAudiences;
     @SerializedName("localAudiencesPercent")
@@ -36,10 +36,12 @@ public class Datum {
     private Double mNetSale;
     @SerializedName("netSalePercent")
     private Double mNetSalePercent;
-    @SerializedName("publisherTypes")
-    private Long mPublisherTypes;
+    @SerializedName("publisherType")
+    private String mPublisherType;
     @SerializedName("sessions")
     private Long mSessions;
+    @SerializedName("showDate")
+    private String mShowDate;
     @SerializedName("totalService")
     private Double mTotalService;
 
@@ -67,6 +69,14 @@ public class Datum {
         mBoxOfficeNoService = boxOfficeNoService;
     }
 
+    public String getFilmCode() {
+        return mFilmCode;
+    }
+
+    public void setFilmCode(String filmCode) {
+        mFilmCode = filmCode;
+    }
+
     public Long getFilmIntroductionId() {
         return mFilmIntroductionId;
     }
@@ -81,14 +91,6 @@ public class Datum {
 
     public void setFilmName(String filmName) {
         mFilmName = filmName;
-    }
-
-    public java.util.List<com.example.wrap.company.weChart.films.List> getList() {
-        return mList;
-    }
-
-    public void setList(java.util.List<com.example.wrap.company.weChart.films.List> list) {
-        mList = list;
     }
 
     public Long getLocalAudiences() {
@@ -155,12 +157,12 @@ public class Datum {
         mNetSalePercent = netSalePercent;
     }
 
-    public Long getPublisherTypes() {
-        return mPublisherTypes;
+    public String getPublisherType() {
+        return mPublisherType;
     }
 
-    public void setPublisherTypes(Long publisherTypes) {
-        mPublisherTypes = publisherTypes;
+    public void setPublisherType(String publisherType) {
+        mPublisherType = publisherType;
     }
 
     public Long getSessions() {
@@ -169,6 +171,14 @@ public class Datum {
 
     public void setSessions(Long sessions) {
         mSessions = sessions;
+    }
+
+    public String getShowDate() {
+        return mShowDate;
+    }
+
+    public void setShowDate(String showDate) {
+        mShowDate = showDate;
     }
 
     public Double getTotalService() {

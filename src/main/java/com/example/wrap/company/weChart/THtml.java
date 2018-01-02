@@ -7,16 +7,16 @@ import org.junit.Test;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import pors.entity.chain.Chains;
-import pors.entity.chain.ShortChainName;
-import pors.entity.cinema.Cinemas;
-import pors.entity.cinema.Datum;
-import pors.entity.films.Films;
-import pors.entity.province.Provinces;
-import cn.gov.sapprft.mtms.pors.util.BigDecimalUtil;
+import com.example.wrap.company.weChart.chain.Chains;
+import com.example.wrap.company.weChart.chain.ShortChainName;
+import com.example.wrap.company.weChart.cinema.Cinemas;
+import com.example.wrap.company.weChart.cinema.Datum;
+import com.example.wrap.company.weChart.films.Films;
+import com.example.wrap.company.weChart.province.Provinces;
 import lombok.extern.slf4j.Slf4j;
 
 
+@SuppressWarnings("ALL")
 @Slf4j
 public class THtml {
 	
@@ -36,7 +36,7 @@ public class THtml {
       final StringBuffer html = new StringBuffer();
 
       html.append("<html>");
-      
+
       html.append("<br/>");
       //全国各省票房周报
 //      final DecimalFormat df = new DecimalFormat("#,###");
@@ -56,7 +56,7 @@ public class THtml {
       html.append(
               "<th style='width:14%;background:#06587a;color:#fff;font-weight:normal;border:0;'>网络售票<br/>占比</th>");*/
       html.append("</tr></thead>");
-      for (final pors.entity.province.Datum province : getProvince().getData()) {
+      for (final com.example.wrap.company.weChart.province.Datum province : getProvince().getData()) {
           String provinceName = null;
           String provinceNameO = province.getProvinceName();
           if (provinceNameO.equals("广西壮族自治区")) {
@@ -127,7 +127,7 @@ public class THtml {
               "<th style='width:14%;background:#06587a;color:#fff;font-weight:normal;border:0;'>网络售票<br/>占比</th>");*/
       html.append("</tr></thead>");
       ShortChainName shortName = new ShortChainName();
-      for (final pors.entity.chain.Datum chain : getChains().getData()) {
+      for (final com.example.wrap.company.weChart.chain.Datum chain : getChains().getData()) {
           //查询院线简称
           String cinemaViewName = shortName.shortChainNameMap.get(chain.getCinemaChainName());
 
@@ -181,7 +181,7 @@ public class THtml {
       html.append(
               "<th style='width:14%;background:#06587a;color:#fff;font-weight:normal;border:0;'>网络售票<br/>占比</th>");*/
       html.append("</tr></thead>");
-      for (final pors.entity.films.Datum film : getFilms().getData()) {
+      for (final com.example.wrap.company.weChart.films.Datum film : getFilms().getData()) {
           html.append("<tr>");
           html.append("<td style='");
           if (!((index % 2) == 0)) {
@@ -231,7 +231,7 @@ public class THtml {
       html.append(
               "<th style='width:14%;background:#06587a;color:#fff;font-weight:normal;border:0;'>网络售票<br/>占比</th>");*/
       html.append("</tr></thead>");
-      
+
       for (final Datum cinema : getCinemas().getData()) {
           html.append("<tr>");
           html.append("<td style='");
@@ -271,6 +271,14 @@ public class THtml {
       return html.toString();
 
   }
+
+  @Test
+public void tt(){
+      this.getProvince().getData().forEach(p->{
+          System.out.println(p.getTotalBoxoffice());
+      });
+}
+
   private Provinces getProvince() {
 	  Provinces cine = null;
 		try {

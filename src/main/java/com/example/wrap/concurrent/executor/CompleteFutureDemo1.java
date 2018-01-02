@@ -93,4 +93,11 @@ public class CompleteFutureDemo1 {
         log.info("Your BMI is - " + combinedFuture.get());
     }
 
+    @Test
+    public void sample4(){
+        //TODO 1. CompletableFuture.allOf（）
+    }
+
+
+
 }
