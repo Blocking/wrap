@@ -1,0 +1,103 @@
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h4 class="panel-title">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-calendar"></i>
+                    <span class="caption-subject bold uppercase">{{$state.current.data.pageTitle}}</span>
+                </div>
+            </div>
+        </h4>
+    </div>
+    <div class="panel-body">
+
+        <!-- BEGIN Portlet PORTLET-->
+        <div class="portlet light bordered">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-calendar"></i>
+                    <span class="caption-subject bold uppercase">基本信息</span>
+                </div>
+                <div class="tools">
+                    <button type="button" class="btn btn-circle btn-default"
+                            data-toggle="collapse" data-target="#condition"
+                            aria-expanded="false" aria-controls="search">
+                        <i class="fa fa-angle-down"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="portlet-body">
+                <div id="condition" class="form-horizontal collapse in"
+                     aria-expanded="true">
+                <!-- BEGIN FORM-->
+                <form id="form" name="form" class="form-horizontal" novalidate>
+                    <div class="form-body">
+                        #foreach($field in $fields)
+#if($velocityCount%2==1)<div class="row">#end
+
+                             <div class="col-md-6" ng-class="{ 'has-error' :(form.$field.$touched || form.$submitted ) && form.$field.$invalid}">
+                                <div class="form-group">
+                                    <label class="control-label col-md-4">$field<span class="text-danger">*</span></label>
+                                    <div class="col-md-8">
+                                        <input type="text" name="$field" class="form-control" placeholder="$field" required
+                                               ng-model="model.$field"/>
+                                        <div class="help-block" ng-show="form.$submitted || form.$field.$touched"
+                                             ng-messages="form.$field.$error">
+                                            <p ng-message="required">$field为必填项</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        #if($velocityCount%2==0||$velocityCount==$fieldSize)</div>#end
+
+                    #end</div>
+                </form>
+                <!-- END FORM-->
+                    </div>
+            </div>
+
+        </div>
+        <!-- END Portlet PORTLET-->
+		
+		<div class="row">
+            <div class="col-md-12">
+                <a href="#" class="btn blue" ng-click="back()">
+                    <i class="fa fa-mail-reply"></i>&nbsp;<span>返回 </span>
+                </a>
+                <button type="submit" class="btn green" ng-click="submit(form)">
+                    <i class="fa fa-check"></i>&nbsp;<span>提交 </span>
+                </button>
+                <a href="/#myModal1" data-toggle="modal" class="btn red">
+                    <i class="fa fa-repeat"></i>&nbsp;<span>重置 </span>
+                </a>
+            </div>
+        </div>
+		
+        </div>
+</div>
+<div id="myModal1" class="modal fade" tabindex="-1" role="dialog"
+     aria-labelledby="myModalLabel1" aria-hidden="true"
+     style="display: none;">
+    <div class="modal-dialog ">
+        <div class="modal-content">
+            <div class="modal-header blue">
+                <button type="button" class="close" data-dismiss="modal"
+                        aria-hidden="true"></button>
+                <h3 class="modal-title text-center ">系统提示</h3>
+            </div>
+            <div class="modal-body">
+                <p class="text-center">
+                    是否要重置页面中的信息？
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn blue" data-dismiss="modal"
+                        ng-click="reset(form)">确定
+                </button>
+                <button class="btn default" data-dismiss="modal"
+                        aria-hidden="true">取消
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

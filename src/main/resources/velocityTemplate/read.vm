@@ -1,0 +1,66 @@
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h4 class="panel-title">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-calendar"></i>
+                    <span class="caption-subject bold uppercase">{{$state.current.data.pageTitle}}</span>
+                </div>
+            </div>
+        </h4>
+    </div>
+    <div class="panel-body">
+        <div class="row">
+            <div class="col-md-12">
+                <a href="#" class="btn blue" ng-click="back()">
+                    <i class="fa fa-mail-reply"></i>&nbsp;<span>返回 </span>
+                </a>
+            </div>
+        </div>
+
+        <!-- BEGIN Portlet PORTLET-->
+        <div class="portlet light bordered">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-calendar"></i>
+                    <span class="caption-subject bold uppercase">基本信息</span>
+                </div>
+                <div class="tools">
+                    <button type="button" class="btn btn-circle btn-default"
+                            data-toggle="collapse" data-target="#condition"
+                            aria-expanded="false" aria-controls="search">
+                        <i class="fa fa-angle-down"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="portlet-body">
+                <div id="condition" class="form-horizontal collapse in"
+                     aria-expanded="true">
+                <!-- BEGIN FORM-->
+                <form id="form" name="form" class="form-horizontal" novalidate>
+                    <div class="form-body">
+                            #foreach($field in $fields)
+
+                        #if($velocityCount%2==1)<div class="row">#end
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="control-label col-md-4">$field：</label>
+                                        <div class="col-md-8">
+                                            <p class="form-control-static" style="text-align: left " ng-bind="model.$field"></p>
+                                        </div>
+                                    </div>
+                                </div>
+                        #if($velocityCount%2==0||$velocityCount==$fieldSize)</div>#end
+                            #end
+
+                    </div>
+                </form>
+                <!-- END FORM-->
+                    </div>
+            </div>
+
+        </div>
+        <!-- END Portlet PORTLET-->
+        </div>
+</div>

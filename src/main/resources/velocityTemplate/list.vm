@@ -1,0 +1,87 @@
+<!-- BEGIN Portlet PORTLET-->
+<div class="portlet light">
+    <div class="portlet-title">
+        <div class="caption">
+            <i class="fa fa-calendar"></i>
+            <span class="caption-subject bold uppercase">{{$state.current.data.pageTitle}}</span>
+        </div>
+        <div class="tools">
+            <button type="button" class="btn btn-circle btn-default" data-toggle="collapse" data-target="#condition"
+                    aria-expanded="false" aria-controls="search">
+                <i class="fa fa-angle-down"></i>
+            </button>
+        </div>
+    </div>
+    <div class="portlet-body form">
+        <div id="condition" class="form-horizontal collapse in" aria-expanded="true">
+            <div class="row">
+                #foreach($field in $fields)
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label class="control-label col-md-4">$field</label>
+                            <div class="col-md-6">
+                                <input type="text" class="form-control form-control-inline"
+                                       data-toggle="tooltip"  ng-model="condition.$field">
+                            </div>
+                        </div>
+                    </div>
+                #end
+        </div>
+
+        <div class="row">
+            <div class="form-group">
+                <div class="col-md-12 text-center">
+                    <button type="button" class="btn green delete" ng-click="create()" ng-if="buttonKeys[0]">
+                        <i class="fa fa-plus"></i>&nbsp;<span>新增 </span>
+                    </button>
+                    <button type="button" class="btn red delete" ng-click="search()" ng-if="buttonKeys[2]">
+                        <i class="fa fa-search"></i>&nbsp;<span>查询 </span>
+                    </button>
+                    <button type="button" class="btn blue delete" ng-click="exportExcel()" ng-if="buttonKeys[1]">
+                        <i class="fa fa-download"></i>&nbsp;<span>导出 </span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <ng-table
+            columns="columns"
+            sort="sort"
+            order="order"
+            pageable="pageable"
+            rows="rows">
+    </ng-table>
+
+    <script type="text/ng-template" id="operation.html">
+        <div class="text-center">
+            <button class="btn green btn-xs" data-ng-click="onActionClick(row, 'onReadClick')" data-ng-if="buttonKeys[3]">查看
+            </button>
+            <button class="btn green btn-xs" data-ng-click="onActionClick(row, 'onEditClick')" data-ng-if="buttonKeys[4]">编辑
+            </button>
+
+            <a href="/#myModal1" data-toggle="modal" ng-click="onActionClick(row,'showDiv')" class="btn btn-xs green"
+            data-ng-if="buttonKeys[5]">{{row.actived?'停用':'启用'}}</a>
+        </div>
+    </script>
+    <div id="myModal1" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel1" aria-hidden="true"
+         style="display: none;">
+        <div class="modal-dialog ">
+            <div class="modal-content">
+                <div class="modal-header blue">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                    <h3 class="modal-title text-center ">系统提示</h3>
+                </div>
+                <div class="modal-body">
+                    <p class="text-center">
+                        确定修改状态？
+                    </p>
+                </div>
+                <div class="modal-footer ">
+                    <button class="btn blue" data-dismiss="modal" ng-click="changeStatus()">确定</button>
+                    <button class="btn default" data-dismiss="modal" aria-hidden="true">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- END Portlet PORTLET-->

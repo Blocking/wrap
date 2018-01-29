@@ -1,0 +1,356 @@
+/*
+行业管理--网络代售商管理
+ */
+angular.module("MetronicApp")
+    .controller('${model}Controller}',
+        ['$rootScope', '$scope', '$location', '${model}Service', 'toastr', 'toastrConfig', 'EnumService',
+            function ($rootScope, $scope, $location, ${model}Service, toastr, toastrConfig, EnumService) {
+                $scope.$on('$viewContentLoaded', function () {
+                    Metronic.initAjax();
+                    $rootScope.settings.layout.pageBodySolid = true;
+                    $rootScope.settings.layout.pageSidebarClosed = false;
+                });
+                //ng-table about
+                $scope.columns = ${model}Service.getSchema();
+                $scope.sort = ${model}Service.getSort();
+                $scope.order = ${model}Service.getOrder();
+                $scope.pageable = ${model}Service.getPageable();
+                //search condition
+                $scope.condition = {};
+                //method of fetch list data
+                $scope.list = function () {
+                    ${model}Service.list(function (res) {
+                        if ('success' == res.status){
+                            $scope.rows = res.data;
+                            $scope.pageable=res.pageable;
+                        }else {
+                            if(res.errors.length>=0){
+                                angular.forEach(res.errors,function(each){
+                                    toastr.error("", each.errmsg);
+                                });
+                            }else{
+                                toastr.error("", "查询异常！");
+                            }
+                        }
+                    });
+                };
+
+                //start to fetch list data
+
+                if($location.search().storeParam){
+                    if(!$rootScope.storeSearchableAndPageable.searchable || !$rootScope.storeSearchableAndPageable.pageable){
+                        $scope.pageable = ${model}Service.initializePageable();
+                        ${model}Service.setAndClearFunction();
+                    }
+                }else {
+                    $scope.pageable = ${model}Service.initializePageable();
+                    ${model}Service.setAndClearFunction();
+                }
+
+
+                //fetch data when the size of page changed
+                $scope.$watch('pageable.size', function (newVal, oldVal) {
+                    if (newVal == oldVal) return;
+                    ${model}Service.setSize(newVal);
+                    ${model}Service.setStoredPage(0);
+                    $scope.list();
+                });
+
+                //fetch data when the number of pages changed
+                $scope.$watch('pageable.number', function (newVal, oldVal) {
+                    if (newVal == oldVal) return;
+                    ${model}Service.setStoredPage(newVal);
+                    $scope.list();
+                });
+
+                //fetch data when the sort or order changed
+                $scope.$watch('sort', function (newVal, oldVal) {
+                    if (newVal == oldVal) return;
+                    ${model}Service.setSort(newVal);
+                    $scope.list();
+                });
+                $scope.$watch('order', function (newVal, oldVal) {
+                    if (newVal == oldVal) return;
+                    ${model}Service.setOrder(newVal);
+                    $scope.list();
+                });
+
+                //search
+                $scope.search = function () {
+                    ${model}Service.putSearchParams(
+                        {
+                            #foreach($field in ${fields})
+                                #if($velocityCount != ${fieldSize})
+                                    $field: $scope.condition.$field,
+                                #else
+                                    $field: $scope.condition.$field
+                                #end
+                            #end
+                        }
+                    );
+                    $scope.list();
+                };
+
+                //新增
+                $scope.create = function () {
+                    $location.path("/industrialManagement/onlinePlatformManagement/add.html");
+                };
+
+
+                //导出excel
+                    $scope.exportExcel = function () {
+                        $scope.params = {
+                            webname: $scope.condition.webName,
+                            actived: $scope.condition.disabled,
+                            internetSalesAgentCode: $scope.condition.internetSalesAgentCode
+                        };
+                    ${model}Service.exportExcelfile($scope.params);
+
+                };
+                //optioned, invoked if action column exist and action template has onEditClick event
+                $scope.onEditClick = function (row) {
+                    $rootScope.storeSearchableAndPageable.searchable = $scope.condition;
+                    $rootScope.storeSearchableAndPageable.pageable = $scope.pageable;
+                    $location.path("/${model}Management}/edit.html").search\({id: row.id});
+                };
+
+                $scope.onReadClick = function (row) {
+                    $rootScope.storeSearchableAndPageable.searchable = $scope.condition;
+                    $rootScope.storeSearchableAndPageable.pageable = $scope.pageable;
+                    $location.path("/${model}Management/read.html").search\({id: row.id});
+                };
+
+                $scope.rowid = "";
+                $scope.actived = "";
+                $scope.showDiv = function (row) {
+                    $scope.rowid = row.id;
+                    $scope.actived = row.actived;
+                };
+                $scope.changeStatus = function () {
+                    if (!$scope.actived) {
+                        ${model}Service.changeStatusToEnable($scope.rowid).$promise.then\(function (result) {
+                            if ('success' == result.status) {
+                                $scope.list();
+                                toastr.success("", "状态修改成功！");
+                            } else {
+                                if(result.errors.length>=0){
+                                    angular.forEach(result.errors,function(each){
+                                        toastr.error("", each.errmsg);
+                                    });
+                                }else{
+                                    toastr.error("", "状态修改失败！");
+                                }
+                            }
+                        });
+                    } else {
+                        ${model}Service.changeStatusToDisable($scope.rowid).$promise.then\(function (result) {
+                            if ('success' == result.status) {
+                                $scope.list();
+                                toastr.success("", "状态修改成功！");
+                            } else {
+                                if(result.errors.length>=0){
+                                    angular.forEach(result.errors,function(each){
+                                        toastr.error("", each.errmsg);
+                                    });
+                                }else{
+                                    toastr.error("", "状态修改失败！");
+                                }
+                            }
+                        });
+                    }
+                };
+                if($location.search().storeParam){
+                    if(!$rootScope.storeSearchableAndPageable.searchable || !$rootScope.storeSearchableAndPageable.pageable){
+                        return;
+                    }
+                    $scope.condition = $rootScope.storeSearchableAndPageable.searchable;
+                    $scope.pageable = $rootScope.storeSearchableAndPageable.pageable;
+                    $scope.list();
+                }
+            }])
+    .controller('${${model}EditController}',
+        ['$rootScope', '$scope', '$q','$http','$location', 'toastr', '${model}Service', 'EnumService', 'DictService', '$timeout',
+            function ($rootScope, $scope, $q, $http,$location, toastr, ${model}Service,EnumService, DictService, $timeout) {
+                $scope.$on('$viewContentLoaded', function () {
+                    // initialize core components
+                    Metronic.initAjax();
+                    $rootScope.settings.layout.pageBodySolid = true;
+                    $rootScope.settings.layout.pageSidebarClosed = false;
+                });
+
+                $scope.model = {};
+                $scope.master = {};
+                $scope.onlinePlatformCode = "";
+                var name = "";
+                var webName ="";
+                //传递过来的ID
+                var id = $scope.model.id = $location.search().id;
+
+                if(!id){
+                    ${model}Service.getCode().$promise.then\(function(res){
+                        if ('success' == res.status){
+                            $scope.model.code = res.data;
+                        }else {
+                            if(res.errors.length>=0){
+                                angular.forEach(res.errors,function(each){
+                                    toastr.error("", each.errmsg);
+                                });
+                            }else{
+                                toastr.error("", "查询异常！");
+                            }
+                        }
+
+
+                    });
+                }
+                //远程校验
+                var nameTimeout;
+                $scope.nameValidator = function (value) {
+                    if (!id || value != name) {
+                        return $q(function (resolve, reject) {
+                            if (nameTimeout)
+                                $timeout.cancel(nameTimeout);
+                            nameTimeout = $timeout(function () {
+                                ${model}Service.checkNameExist(value).$promise.then\(function (res) {
+                                    if (res.status=="failure") {
+                                        reject();
+                                    }
+                                    else{
+                                        resolve();
+                                    }
+
+                                }, function () {
+                                    reject();
+                                });
+                            }, 1000);
+                        });
+                    } else {
+                        return true;
+                    }
+                };
+                nameTimeout;
+                $scope. legalPersonNameValidator = function (value) {
+                    if (!id || value != webName) {
+                        return $q(function (resolve, reject) {
+                            if (nameTimeout)
+                                $timeout.cancel(nameTimeout);
+                            nameTimeout = $timeout(function () {
+                                ${model}Service.checkWebNameExist(value).$promise.then\(function (res) {
+                                    if (res.status=="failure") {
+                                        reject();
+                                    }
+                                    else{
+                                        resolve();
+                                    }
+
+                                }, function () {
+                                    reject();
+                                });
+                            }, 1000);
+                        });
+                    } else {
+                        return true;
+                    }
+                };
+
+
+
+                //网络代售商状态枚举列表
+                $scope.onlinePlatformStatus = EnumService.get('activedData');
+
+                //发送REST请求，获取主表信息
+                if (undefined !== id) {
+                    ${model}Service.get(id).$promise.then\(function (result) {
+                        if ('success' == result.status){
+                            $scope.model = result.data;
+                            name=$scope.model.name;
+                            webName=$scope.model.webName;
+                            if (true === $scope.model.actived) {
+                                $scope.model.actived = "true";
+                            } else {
+                                $scope.model.actived = "false";
+                            }
+                            $scope.master = angular.copy($scope.model);
+                        }else {
+                            if(result.errors.length>=0){
+                                angular.forEach(result.errors,function(each){
+                                    toastr.error("", each.errmsg);
+                                });
+                            }else{
+                                toastr.error("", "获取信息异常！");
+                            }
+                        }
+
+                    });
+                }
+
+                //返回上一页
+                $scope.back = function () {
+                    if (undefined == $scope.model.id) {
+                        $location.path("/industrialManagement/onlinePlatformManagement/list.html").search\({});
+                    } else {
+                        $location.path("/industrialManagement/onlinePlatformManagement/list.html").search\({storeParam: true});
+                    }
+                }
+                //提交处理，页面存在两个表单，提交时，需对两个表单同时校验
+                $scope.submit = function (form) {
+                    form.$submitted = true;
+                    //如果两个表单都校验通过，则发送请求
+                    $scope.model.name;
+                    if (form.$valid) {
+                        ${model}Service.save($scope.model).$promise.then\(function (result) {
+                            if ('success' == result.status) {
+                                toastr.success("", "网络代售商信息保存成功！");
+                               // $location.path("/industrialManagement/onlinePlatformManagement/list.html").search\({storeParam:true});
+                            $scope.back();
+                            }else {
+                                if(result.errors.length>=0){
+                                    angular.forEach(result.errors,function(each){
+                                        toastr.error("", each.errmsg);
+                                    });
+                                }else{
+                                    toastr.error("", "网络代售商信息保存失败！");
+                                }
+                            }
+                        });
+                    }
+                };
+
+                //重置处理
+                $scope.reset = function (form) {
+                    if (id) {
+                        $scope.model = angular.copy($scope.master);
+                        form.$submitted = false;
+                    } else {
+                        $scope.model.actived = "";
+                        $scope.model.webName = null;
+                        $scope.model.webUrl = null;
+                        $scope.model.name = null;
+                        $scope.model.contactPerson = null;
+                        $scope.model.mobile = null;
+                        $scope.model.email = null;
+
+                        form.$submitted = false;
+
+                    }
+
+                };
+            }])
+    .filter("webStatusFilter", function () {
+        return function (value) {
+            if (!value) {
+                return "停用";
+            } else {
+                return "启用";
+            }
+        };
+    })
+    .filter("webStatusFilter_1", function () {
+        return function (value) {
+            if (value != "true") {
+                return "停用";
+            } else {
+                return "启用";
+            }
+        };
+    });
