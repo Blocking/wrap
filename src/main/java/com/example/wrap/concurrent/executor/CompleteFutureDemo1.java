@@ -1,6 +1,6 @@
 package com.example.wrap.concurrent.executor;
 
-import com.example.wrap.JDK8.entity.User;
+import com.example.wrap.jdk8.entity.User;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 

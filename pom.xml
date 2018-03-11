@@ -101,6 +101,11 @@
             <artifactId>vpp</artifactId>
             <version>2.2.1</version>
         </dependency>
+		<dependency>
+			<groupId>org.apache.directory.studio</groupId>
+			<artifactId>org.apache.commons.io</artifactId>
+			<version>2.4</version>
+		</dependency>
 
     </dependencies>
 

@@ -3,7 +3,6 @@ package com.example.wrap.concurrent.executor;
  * Created by E0441 on 2017/12/5.
  */
 
-import com.example.wrap.JDK8.entity.User;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import org.apache.commons.lang3.concurrent.BasicThreadFactory;
 import org.junit.Test;

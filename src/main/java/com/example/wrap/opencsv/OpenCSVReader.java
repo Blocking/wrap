@@ -11,7 +11,9 @@ import java.nio.file.Paths;
 import java.util.List;
 
 /**
- * Created by 12232 on 2017/12/23.
+ *
+ * @author 12232
+ * @date 2017/12/23
  */
 public class OpenCSVReader {
     private static final String SAMPLE_CSV_FILE_PATH = "D:\\test\\csv\\users.csv";

@@ -1,9 +1,8 @@
-package com.example.wrap.JDK8;
+package com.example.wrap.jdk8;
 
-import com.example.wrap.JDK8.entity.Address;
-import com.example.wrap.JDK8.entity.User;
+import com.example.wrap.jdk8.entity.Address;
+import com.example.wrap.jdk8.entity.User;
 import org.junit.Test;
-import org.springframework.boot.context.config.ResourceNotFoundException;
 
 import java.util.Optional;
 

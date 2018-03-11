@@ -1,4 +1,4 @@
-package com.example.wrap.JDK8.entity;
+package com.example.wrap.jdk8.entity;
 
 import lombok.Data;
 

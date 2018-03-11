@@ -15,7 +15,9 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Function;
 import static java.util.stream.Collectors.toList;
 
@@ -33,13 +35,60 @@ public class Sample {
         Files.write(bytes,new File("D:\\pic\\123.JPEG"));
     }
 
+    static  final Map<String,String> map = new HashMap<>(16);
+
+    static {
+        map.put("&#xe32d;","0");
+        map.put("&#xe022;","1");
+        map.put("&#xec81;","2");
+        map.put("&#xee72;","3");
+        map.put("&#xf1a0;","4");
+        map.put("&#xf1f0;","5");
+        map.put("&#xe8b1;","6");
+        map.put("&#xe4aa;","8");
+        map.put("&#xe87c;","9");
+    }
+
+    @Test
+    public void t(){
+        final String str = "&#xee72;&#xec81;.&#xe4aa;&#xe8b1;亿";
+        String str1 = replace(str);
+        System.out.println(str1);
+    }
+
+    private String replace( String str) {
+        for (String key :map.keySet()){
+            str =  str.replaceAll(key,map.get(key));
+        }
+        return  str;
+    }
+
     @Test
     public void sample1() throws IOException {
-        Request.Get("http://piaofang.maoyan.com/?ver=normal")
+//        Request.Get("http://piaofang.maoyan.com/?ver=normal")
+//                .connectTimeout(1000)
+//                .socketTimeout(1000)
+//                .setHeader("User-Agent","Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1")
+//                .execute().saveContent(new File("D:\\pic\\result.dump"));
+       /* String html = Request.Get("http://piaofang.maoyan.com/?ver=normal")
                 .connectTimeout(1000)
                 .socketTimeout(1000)
                 .setHeader("User-Agent","Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1")
-                .execute().saveContent(new File("D:\\pic\\result.dump"));
+                .execute().returnContent().asString();*/
+        File file = new File("D:\\\\pic\\\\result.dump");
+
+        Document doc = Jsoup.parse(file,"utf8");
+
+        Elements elements = doc.select("#ticket_tbody ul");
+        elements.stream().forEach(ul->{
+            String filmName = ul.select(".c1 b").text();
+            System.out.print(filmName);
+            ul.select("i").forEach(p->{
+                String str = replace(p.text());
+                System.out.print("::"+p.text());
+            });
+            System.out.println();
+        });
 
     }
 
