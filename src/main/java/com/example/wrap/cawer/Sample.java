@@ -65,16 +65,11 @@ public class Sample {
 
     @Test
     public void sample1() throws IOException {
-//        Request.Get("http://piaofang.maoyan.com/?ver=normal")
-//                .connectTimeout(1000)
-//                .socketTimeout(1000)
-//                .setHeader("User-Agent","Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1")
-//                .execute().saveContent(new File("D:\\pic\\result.dump"));
-       /* String html = Request.Get("http://piaofang.maoyan.com/?ver=normal")
+        Request.Get("http://piaofang.maoyan.com/?ver=normal")
                 .connectTimeout(1000)
                 .socketTimeout(1000)
                 .setHeader("User-Agent","Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1")
-                .execute().returnContent().asString();*/
+                .execute().saveContent(new File("D:\\pic\\result.dump"));
         File file = new File("D:\\\\pic\\\\result.dump");
 
         Document doc = Jsoup.parse(file,"utf8");
