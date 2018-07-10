@@ -4,15 +4,19 @@ package com.example.wrap.concurrent.executor;
  */
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.concurrent.BasicThreadFactory;
 import org.junit.Test;
 
+import java.util.List;
 import java.util.concurrent.*;
+import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * @author E0441
  *
-线程池不允许使用Executors去创建，而是通过ThreadPoolExecutor的方式，这样的处理方式让写的同学更加明确线程池的运行规则，规避资源耗尽的风险。 说明：Executors各个方法的弊端：
+线程池不允许使用Executors去创建，而是通过ThreadPoolExecutor的方式，这样的处理方式让写的同学更加明确线程池的运行规则，
+规避资源耗尽的风险。 说明：Executors各个方法的弊端：
 1）newFixedThreadPool和newSingleThreadExecutor:
   主要问题是堆积的请求处理队列可能会耗费非常大的内存，甚至OOM。
 2）newCachedThreadPool和newScheduledThreadPool:
@@ -34,7 +38,7 @@ ExecutorService pool = new ThreadPoolExecutor(5, 200,
 0L, TimeUnit.MILLISECONDS,
 new LinkedBlockingQueue<Runnable>(1024), namedThreadFactory, new ThreadPoolExecutor.AbortPolicy());
 
-pool.execute(()-> System.out.println(Thread.currentThread().getName()));
+pool.execute(()-> log.info(Thread.currentThread().getName()));
 pool.shutdown();//gracefully shutdown
 
 
@@ -54,31 +58,39 @@ class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
 //in code
 userThreadPool.execute(thread);
  **/
+@Slf4j
 public class ExecutorsT {
 //    static ExecutorService executorService = ExecutorsT.newCachedThreadPool(); 采用手动创建线程池 理由在上方
-    ScheduledExecutorService executorService = new ScheduledThreadPoolExecutor(1,
+    ScheduledExecutorService executorService = new ScheduledThreadPoolExecutor(10,
         new BasicThreadFactory.Builder().namingPattern("example-schedule-pool-%d").daemon(true).build());
+
+    private AtomicLong aLong = new AtomicLong(1);
 
     @Test
     public void sample1() throws ExecutionException, InterruptedException {
         final Callable<Boolean> task = ()->{
-            System.out.println("123");
+            log.info("123");
             return true;
         };
 		Future<Boolean> is  = executorService.submit(task);
-        System.out.println(is.get());
+        log.info("result:[{}]",is.get());
     }
     @Test
-    public void sample2(){
+    public void sample2() throws InterruptedException {
         ThreadFactory namedThreadFactory = new ThreadFactoryBuilder()
                 .setNameFormat("demo-pool-%d").build();
 
         //Common Thread Pool
-        ExecutorService pool = new ThreadPoolExecutor(5, 200,
+        ExecutorService pool = new ThreadPoolExecutor(5, 100,
                 0L, TimeUnit.MILLISECONDS,
-                new LinkedBlockingQueue<Runnable>(1024), namedThreadFactory, new ThreadPoolExecutor.AbortPolicy());
+                new LinkedBlockingQueue<Runnable>(2000), namedThreadFactory, new ThreadPoolExecutor.AbortPolicy());
 
-        pool.execute(()-> System.out.println(Thread.currentThread().getName()));
+        for (int i = 0; i <12025 ; i++) {
+            pool.execute(() -> log.info("::"+aLong.getAndIncrement()));
+            pool.submit(() -> log.info("::"+aLong.getAndIncrement()));
+        }
+        TimeUnit.SECONDS.sleep(5L);
+        System.out.println(((ThreadPoolExecutor) pool).getCompletedTaskCount());
         pool.shutdown();//gracefully shutdown
     }
 
@@ -93,16 +105,16 @@ public class ExecutorsT {
         CompletionService<Boolean> completionService =
                 new ExecutorCompletionService<>(executorService);
         completionService.submit(()->{
-            System.out.println("123");
+            log.info("123");
             return true;
         } );
         Future<Boolean> fu = completionService.take();
-        System.out.println(fu.get());
+        log.info("result:{}",fu.get());
     }
     @Test
     public void use2() throws ExecutionException, InterruptedException {
         CompletableFuture<Void> mm = CompletableFuture.runAsync(()->{
-            System.out.println("123456");
+            log.info("123456");
         },executorService);
         mm.get();
 
@@ -118,7 +130,7 @@ public class ExecutorsT {
             return "result";
         });
         String result = future.get();
-        System.out.println(result);
+        log.info(result);
     }
     @Test
     public void use4() throws ExecutionException, InterruptedException {
@@ -136,7 +148,7 @@ public class ExecutorsT {
         //当然这个 thenApply方法是可以连续调用的 所以你可以有一系列处理
         //同时这些方法都是默认执行在fork-join池中的  当然也提供了重载的方法 方便使用自己的线程池
         CompletableFuture<String> greetingFuture = ss.thenApply(s -> {return "hello "+s;});
-        System.out.println(greetingFuture.get());
+        log.info(greetingFuture.get());
     }
 
     /**
@@ -145,13 +157,15 @@ public class ExecutorsT {
      * 同时这些方法都是默认执行在fork-join池中的  当然也提供了重载的方法 方便使用自己的线程池
      */
     @Test
-    public void use5(){
+    public void use5() throws InterruptedException {
         // thenAccept() example 可以接受future返回的结果 但是不会返回自己的回调结果 是Void
         CompletableFuture<Void> accept =  CompletableFuture.supplyAsync(() -> {
             return getDetail();
         }).thenAccept(product -> {//此时通常会调用主线程执行 thenAccept方法 存在重载方法thenAcceptAsync() 在fork-join池中执行 还可以使用自己定义的线程池
-            System.out.println("Got product detail from remote service " );
+            log.info("Got product detail from remote service " );
         });
+        //主线程休眠等待子线程执行完毕 方便查看结果
+        TimeUnit.SECONDS.sleep(1L);
     }
 
     /**
@@ -163,12 +177,12 @@ public class ExecutorsT {
         CompletableFuture.supplyAsync(() -> {
             return getDetail();
         }).thenRun(() -> {
-            System.out.println("Got product detail from remote service " );
+            log.info("Got product detail from remote service " );
         });
     }
 
     private boolean getDetail() {
-        System.out.println("detail-------");
+        log.info("detail-------");
         return true;
     }
 

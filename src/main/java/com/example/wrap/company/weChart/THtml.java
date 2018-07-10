@@ -286,7 +286,7 @@ public void tt(){
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		cine.getData().remove(31);
+//		cine.getData().remove(31);
 		return cine;
 	}
 private Chains getChains() {

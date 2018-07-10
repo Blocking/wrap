@@ -14,10 +14,8 @@ import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.concurrent.*;
 import java.util.function.Function;
 import static java.util.stream.Collectors.toList;
 
@@ -62,29 +60,44 @@ public class Sample {
         }
         return  str;
     }
-
+    String videoUrl = "http://gslb.miaopai.com/stream/BkOTopK30phCw1RW0b7AKF61Uv53bKS4Ia00xw__.mp4?yx=&Expires=1530091521&ssig=%2F40983h3dq&KID=unistore,video";
+    ThreadLocal<Integer> index = ThreadLocal.withInitial(() -> 0);
     @Test
-    public void sample1() throws IOException {
-        Request.Get("http://piaofang.maoyan.com/?ver=normal")
+    public void sample1() throws IOException, ExecutionException, InterruptedException {
+        String [] arrUrl = {"http://gslb.miaopai.com/stream/Wsli4c6mxTrndU8Qh7KVdMKMdx5xCSK1G5ji~A__.mp4?yx=&Expires=1530177848&ssig=PMFimJA%2FFd&KID=unistore,video"
+                ,"http://gslb.miaopai.com/stream/pm~sVkpVLh27Ld-y~6X9cB2qpftKvzLAvj70XQ__.mp4?yx=&Expires=1530177848&ssig=h2Dny%2F6bf1&KID=unistore,video"
+        ,"http://gslb.miaopai.com/stream/ExMJqVu55YRKFqSNDrXxRdklrkmR9SY0~ZPSaA__.mp4?yx=&Expires=1530177849&ssig=J7xCsNNmtG&KID=unistore,video"
+        ,"http://gslb.miaopai.com/stream/VK5TOgO1UuqUVhL2lAfpN5qO0E5zArZuz-Ln5A__.mp4?yx=&refer=weibo_app"};
+
+        String [] newUrl ={"http://gslb.miaopai.com/stream/Mp1tE88wuPQKNDVJ-EscLeFvme3nY2R9s3FFVg__.mp4?yx=&refer=weibo_app",
+        "http://gslb.miaopai.com/stream/mvC5oJpdPXWOKq9Jpm4e~Jv-xb-P9ML1K~uP0A__.mp4?yx=&refer=weibo_app",
+        "http://gslb.miaopai.com/stream/lT~ERKZt8eaJJ5fBsjCUs-6V2qTwtsTtGnzFDw__.mp4?yx=&refer=weibo_app",
+        "http://gslb.miaopai.com/stream/X7kubCWrXnVJVKWeslUQG0e8SUvHr59TUbLKIA__.mp4?yx=&refer=weibo_app"};
+        for (int i = 2; i < arrUrl.length; i++) {
+            Request.Get(arrUrl[i])
+                    .connectTimeout(1000)
+                    .socketTimeout(1000)
+                    .setHeader("User-Agent","Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1")
+                    .execute().saveContent(new File("D:\\pic\\oVideo"+i+".mp4"));
+        }
+
+
+    }
+    @Test
+    public void tt1(){
+        float m = 1.55f;
+        int im = (int)(m*100);
+        System.out.println(im);
+    }
+    @Test
+    public void setConvert1() throws IOException {
+        String u = "http://k.sina.cn/article_6337272266_v179bb19ca00100bkuh.html?sinawapsharesource=newsapp";
+        String html = Request.Get(u)
                 .connectTimeout(1000)
                 .socketTimeout(1000)
                 .setHeader("User-Agent","Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1")
-                .execute().saveContent(new File("D:\\pic\\result.dump"));
-        File file = new File("D:\\\\pic\\\\result.dump");
-
-        Document doc = Jsoup.parse(file,"utf8");
-
-        Elements elements = doc.select("#ticket_tbody ul");
-        elements.stream().forEach(ul->{
-            String filmName = ul.select(".c1 b").text();
-            System.out.print(filmName);
-            ul.select("i").forEach(p->{
-                String str = replace(p.text());
-                System.out.print("::"+p.text());
-            });
-            System.out.println();
-        });
-
+                .execute().returnContent().asString();
+        log.info("html:{}",html);
     }
 
     @Test
@@ -120,6 +133,7 @@ public class Sample {
         }
     }
 
+    String tempUrl = "https://k.sina.cn/article_6337272266_m179bb19ca03300bel5.html?fromsinago=1&wm=3200_0001&http=fromhttp";
     @Test
     public void parseDingDianSiteHtml() throws IOException {
         Document doc = Jsoup.connect("http://www.baidu.com/link?url=iCM1EbZNNcJAH2E5PrI_BR-v9y4KjGfoCi1y74w8adN6d3U-pDkRqkHwa2gRB8j-").get();
@@ -129,6 +143,15 @@ public class Sample {
         Document article = Jsoup.connect(url).get();
         article.select(".entry p").stream().forEach(element -> {
             System.out.println(element.text());
+        });
+    }
+
+    @Test
+    public void parsePiaotianSiteHtml() throws IOException {
+        Document doc = Jsoup.connect("https://www.piaotian.com/html/9/9011/6190965.html").get();
+        Elements elements = doc.select("br");
+       elements.stream().forEach(p->{
+            System.out.println(p.text());
         });
     }
 

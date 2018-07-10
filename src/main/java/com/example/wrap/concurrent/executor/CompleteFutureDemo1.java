@@ -2,8 +2,16 @@ package com.example.wrap.concurrent.executor;
 
 import com.example.wrap.jdk8.entity.User;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.time.DateFormatUtils;
+import org.apache.commons.lang3.time.DateUtils;
 import org.junit.Test;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.text.ParseException;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
@@ -17,14 +25,10 @@ public class CompleteFutureDemo1 {
     /////////////////将两个CompletableFutures组合在一起//////////////////////////
 
     CompletableFuture<User> getUserDetail(String password){
-        return CompletableFuture.supplyAsync(() -> {
-            return new User("tom",password);
-        });
+        return CompletableFuture.supplyAsync(() -> new User("tom",password));
     }
     CompletableFuture<String> getCreditRating(User user){
-        return CompletableFuture.supplyAsync(() -> {
-            return user.getPassword();
-        });
+        return CompletableFuture.supplyAsync(() -> user.getPassword());
     }
 
     /**

@@ -38,7 +38,7 @@ public class GenWeChartHtml {
 //      final DecimalFormat df = new DecimalFormat("#,###");
         html.append("<table style='border-collapse:collapse;font-size:12px;border:0;'>");
         html.append("<thead>");
-        html.append("<tr><caption style='font-size:14px'>全国各省票房年报(含服务费)</caption></tr>");
+        html.append("<tr><caption style='font-size:14px'>2018全国各省票房上半年报告(含服务费)</caption></tr>");
         html.append("<tr><th style='width:8%;background:#06587a;color:#fff;font-weight:normal;border:0;'>排名</th>");
         html.append("<th style='width:20%;background:#06587a;color:#fff;font-weight:normal;border:0;'>省份</th>");
         html.append(
@@ -108,7 +108,7 @@ public class GenWeChartHtml {
 
         html.append("</table><br  /><br  />");
         html.append("<table style='border-collapse:collapse;font-size:12px;border:0;'>");
-        html.append("<thead><tr> <caption style='font-size:14px'>全国院线票房年报(含服务费)</caption></tr>");
+        html.append("<thead><tr> <caption style='font-size:14px'>2018全国院线票房上半年报告(含服务费)</caption></tr>");
         html.append("<tr><th style='width:8%;background:#06587a;color:#fff;font-weight:normal;border:0;'>排名</th>");
         html.append("<th style='width:20%;;background:#06587a;color:#fff;font-weight:normal;border:0;'>院线</th>");
         html.append(
@@ -163,7 +163,7 @@ public class GenWeChartHtml {
         html.append("</table><br  /><br  />");
 
         html.append("<table style='border-collapse:collapse;font-size:12px;border:0;'>");
-        html.append("<thead><tr> <caption style='font-size:14px'>全国排名前100名影片票房房年报(含服务费)</caption></tr>");
+        html.append("<thead><tr> <caption style='font-size:14px'>2018全国排名前100名影片票房上半年报告(含服务费)</caption></tr>");
         html.append("<tr><th style='width:8%;background:#06587a;color:#fff;font-weight:normal;border:0;'>排名</th>");
         html.append("<th style='width:25%;background:#06587a;color:#fff;font-weight:normal;border:0;'>影片名称</th>");
         html.append(
@@ -213,7 +213,7 @@ public class GenWeChartHtml {
         index = 1;
         html.append("</table><br  /><br  />");
         html.append("<table style='border-collapse:collapse;font-size:12px;border:0;'>");
-        html.append("<thead><tr> <caption style='font-size:14px'>全国排名前100名影院票房年报(含服务费)</caption></tr>");
+        html.append("<thead><tr> <caption style='font-size:14px'>2018全国排名前100名影院票房上半年报告(含服务费)</caption></tr>");
         html.append("<tr><th style='width:8%;background:#06587a;color:#fff;font-weight:normal;border:0;'>排名</th>");
         html.append("<th style='width:25%;background:#06587a;color:#fff;font-weight:normal;border:0;'>影院名称</th>");
         html.append(
@@ -254,36 +254,38 @@ public class GenWeChartHtml {
         }
         html.append("</table><br  /><br  />");
         html.append("</html>");
+        log.info("length:{}",html.length());
         log.info("生成周报html" + html.toString());
 
     }
 
     private ProvineBean getProvince() throws IOException {
-        Resource resource = new ClassPathResource("/jsonData/province.json");
+        Resource resource = new ClassPathResource("/jsonData/provinceNew.json");
         Reader reader = new FileReader(resource.getFile());
         Gson gson = new Gson();
         ProvineBean provine =  gson.fromJson(reader,ProvineBean.class);
         return  provine;
     }
     private FilmsBean getFilm() throws IOException {
-        Resource resource = new ClassPathResource("/jsonData/films.json");
+        Resource resource = new ClassPathResource("/jsonData/filmsNew.json");
         Reader reader = new FileReader(resource.getFile());
         Gson gson = new Gson();
         FilmsBean film =  gson.fromJson(reader,FilmsBean.class);
         return  film;
     }
     private CnemasBean getCinemas() throws IOException {
-        Resource resource = new ClassPathResource("/jsonData/cinemas.json");
+        Resource resource = new ClassPathResource("/jsonData/cinemasNew.json");
         Reader reader = new FileReader(resource.getFile());
         Gson gson = new Gson();
         CnemasBean cnemasBean =  gson.fromJson(reader,CnemasBean.class);
         return  cnemasBean;
     }
     private ChainsBean getChains() throws IOException {
-        Resource resource = new ClassPathResource("/jsonData/chains.json");
+        Resource resource = new ClassPathResource("/jsonData/chainsNew.json");
         Reader reader = new FileReader(resource.getFile());
         Gson gson = new Gson();
         ChainsBean chainsBean =  gson.fromJson(reader,ChainsBean.class);
+        chainsBean.getData().remove(48);
         return  chainsBean;
     }
 
