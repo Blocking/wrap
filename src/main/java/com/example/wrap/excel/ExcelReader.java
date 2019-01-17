@@ -20,6 +20,7 @@ import java.util.Set;
 public class ExcelReader {
     public static final String SAMPLE_XLSX_FILE_PATH = "D:\\temp\\excel\\environmental2018_12_27白主任.xlsx";
     public static final String MODIFY_XLSX_FILE_PATH = "D:\\temp\\excel\\modify.xlsx";
+    public static final String SOURCE_XLSX_FILE_PATH = "D:\\temp\\excel\\模板（区域小组分组以及导入-导出模板）2018.12.26-鲁.xlsx";
 
     public static Set<String> sheetName = new HashSet<>(3);
 
@@ -96,7 +97,7 @@ public class ExcelReader {
 
     private static Map<String, String> getNatureData() throws IOException, InvalidFormatException {
         // Creating a Workbook from an Excel file (.xls or .xlsx)
-        Workbook workbook = WorkbookFactory.create(new File(MODIFY_XLSX_FILE_PATH));
+        Workbook workbook = WorkbookFactory.create(new File(SOURCE_XLSX_FILE_PATH));
 
         // Create a DataFormatter to format and get each cell's value as String
         DataFormatter dataFormatter = new DataFormatter();
@@ -141,9 +142,9 @@ public class ExcelReader {
 
             String sheetName = sheet.getSheetName();
             log.info("sheetName:{}", sheetName);
-            if (!ExcelReader.sheetName.contains(sheet.getSheetName())) {
+          /*  if (!ExcelReader.sheetName.contains(sheet.getSheetName())) {
                 return;
-            }
+            }*/
 
             System.out.println("=> " + sheet.getSheetName() + "::" + sheet.getPhysicalNumberOfRows());
 
@@ -154,21 +155,21 @@ public class ExcelReader {
                 Cell cell = row.getCell(3);
                 String name = dataFormatter.formatCellValue(cell);
                 String address = "";
-                if ("内部油库基础信息导入&导出模板".equals(sheetName)) {
+               /* if ("内部油库基础信息导入&导出模板".equals(sheetName)) {
                     //地址
                     Cell cell4 = row.getCell(6);
                     address = dataFormatter.formatCellValue(cell4);
-                } else {
+                } else {*/
                     //地址
                     Cell cell4 = row.getCell(5);
                     address = dataFormatter.formatCellValue(cell4);
-                }
+//                }
 
 
                 String key = name.concat(address);
                 if (map.containsKey(key)) {
                     Coordinate coordinate = map.get(key);
-                    if ("加油站基础信息导入&导出模板".equals(sheetName)) {
+                   /* if ("加油站基础信息导入&导出模板".equals(sheetName)) {
                         row.getCell(9).setCellValue(coordinate.getLongitude());
                         row.getCell(10).setCellValue(coordinate.getLatitude());
                     } else if ("黑加油站基础信息导入&导出模板".equals(sheetName)) {
@@ -183,11 +184,13 @@ public class ExcelReader {
                     } else if ("黑加油站任务导入&导出模板".equals(sheetName)) {
                         row.createCell(7).setCellValue(coordinate.getLongitude());
                         row.createCell(8).setCellValue(coordinate.getLatitude());
-                    } else if ("内部油库任务导入&导出模板".equals(sheetName)) {
-                        row.createCell(6).setCellValue(coordinate.getLongitude());
-                        row.createCell(7).setCellValue(coordinate.getLatitude());
+                    } else */if ("内部油库任务导入&导出模板".equals(sheetName)) {
+                        row.getCell(6).setCellValue(coordinate.getLongitude());
+                        row.getCell(7).setCellValue(coordinate.getLatitude());
                     } else {
-                        log.info("未对比到的数据:{} ", key);
+                        row.getCell(7).setCellValue(coordinate.getLongitude());
+                        row.getCell(8).setCellValue(coordinate.getLatitude());
+//                        log.info("未对比到的数据:{} ", key);
                     }
                 }
 
