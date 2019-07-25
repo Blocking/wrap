@@ -1,4 +1,4 @@
-package com.example.wrap.javaFx;
+package com.example.wrap.javafx;
 
 import javafx.application.Application;
 import javafx.geometry.Pos;
@@ -7,7 +7,9 @@ import javafx.scene.control.Label;
 import javafx.stage.Stage;
 
 /**
- * Created by 12232 on 2018/1/29.
+ *
+ * @author 12232
+ * @date 2018/1/29
  */
 public class HelloWorldApplication extends Application {
     @Override
