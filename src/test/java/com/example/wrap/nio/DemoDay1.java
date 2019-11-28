@@ -1,8 +1,11 @@
 package com.example.wrap.nio;
 
+import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
+import org.springframework.util.StringUtils;
 
+import java.io.File;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
 
@@ -65,5 +68,12 @@ public class DemoDay1 {
         System.out.println(anInt);
         buffer.getLong();
     }
+
+    @Test
+    public void demo3(){
+        final String str = StringUtils.trimLeadingCharacter("0000000000000010", '0');
+        System.out.println(str);
+    }
+
 
 }

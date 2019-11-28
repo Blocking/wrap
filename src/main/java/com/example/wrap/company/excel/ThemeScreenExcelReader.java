@@ -25,40 +25,47 @@ public class ThemeScreenExcelReader {
 //        final Map<String, CinemaInfo> cinemaInfoMap =  getCinemaInfo();
 //        final Map<String, Integer> screenInfoMap =  getScreenfo();
 
-        final Workbook workbook = WorkbookFactory.create(new File("D:\\tmp\\error.xlsx"));
+        final Workbook workbook = WorkbookFactory.create(new File("D:\\tmp\\人民院线影厅导入结果校验 (4).xls"));
         List<ThemeScreen> list = new ArrayList<>();
         // Create a DataFormatter to format and get each cell's value as String
         DataFormatter dataFormatter = new DataFormatter();
-        final Sheet sheet = workbook.getSheet("Sheet2");
-        for (int i = 1; i < sheet.getLastRowNum(); i++) {
+        final Sheet sheet = workbook.getSheet("模板");
+        int index = 1;
+        for (int i = 1; i <= sheet.getLastRowNum(); i++) {
             final Row row = sheet.getRow(i);
-            final String num = dataFormatter.formatCellValue(row.getCell(0));
-            final String provinceName = dataFormatter.formatCellValue(row.getCell(2));
-            final String cityName = dataFormatter.formatCellValue(row.getCell(3));
-            final String cinemaCode = dataFormatter.formatCellValue(row.getCell(4));
-            final String cienmaName = dataFormatter.formatCellValue(row.getCell(5));
-            final String scrennCode = dataFormatter.formatCellValue(row.getCell(6));
-
+            final String errorString = dataFormatter.formatCellValue(row.getCell(9));
+            if(StringUtils.isBlank(errorString)){
+                continue;
+            }
+            final String provinceName = dataFormatter.formatCellValue(row.getCell(1));
+            final String cityName = dataFormatter.formatCellValue(row.getCell(2));
+            final String cinemaCode = dataFormatter.formatCellValue(row.getCell(3));
+            final String cienmaName = dataFormatter.formatCellValue(row.getCell(4));
+             String scrennCode = dataFormatter.formatCellValue(row.getCell(5));
+             scrennCode = StringUtils.leftPad(scrennCode,16,'0');
 
             ThemeScreen screen = new ThemeScreen(cinemaCode, cienmaName, scrennCode);
             screen.setCountry(cityName);
             screen.setProvince(provinceName);
-            screen.setNum(num);
+            screen.setNum(index++ +"");
+            screen.setErrorString(errorString);
             list.add(screen);
-            final String scrennCode1 = dataFormatter.formatCellValue(row.getCell(7));
+           /* String scrennCode1 = dataFormatter.formatCellValue(row.getCell(7));
             if (StringUtils.isNotBlank(scrennCode1)) {
+                scrennCode1 = org.springframework.util.StringUtils.trimLeadingCharacter(scrennCode1, '0');
                 final ThemeScreen screen1 = (ThemeScreen) screen.clone();
                 screen1.setScreenCode(scrennCode1);
                 list.add(screen1);
             }
 
-            final String scrennCode2 = dataFormatter.formatCellValue(row.getCell(8));
+            String scrennCode2 = dataFormatter.formatCellValue(row.getCell(8));
             if (StringUtils.isNotBlank(scrennCode2)) {
+                scrennCode2 =  org.springframework.util.StringUtils.trimLeadingCharacter(scrennCode2, '0');
                 final ThemeScreen screen2 = (ThemeScreen) screen.clone();
                 screen2.setScreenCode(scrennCode2);
                 list.add(screen2);
             }
-
+*/
         }
 
         write(list);
@@ -83,6 +90,8 @@ public class ThemeScreenExcelReader {
             row.createCell(3).setCellValue(screen.getCinemaCode());
             row.createCell(4).setCellValue(screen.getCinemaName());
             row.createCell(5).setCellValue(screen.getScreenCode());
+            row.createCell(7).setCellValue("艺术影厅");
+            row.createCell(9).setCellValue(screen.getErrorString());
         }
         OutputStream outputStream = new FileOutputStream("D:\\tmp\\screen1.xls");
         workbook.write(outputStream);
@@ -170,6 +179,8 @@ class ThemeScreen implements Cloneable {
     private String screenCode;
     private int seatCounts;
     private String businessType;
+
+    private String errorString;
 
     @Override
     protected Object clone() throws CloneNotSupportedException {
