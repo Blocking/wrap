@@ -25,8 +25,8 @@ public class SqlTest {
             + "(case when a.key is null then b.cinema_code else a.cinema_code end) as cinema_code, "
             + "(case when a.key is null then b.screen_code else a.screen_code end) as screen_code, "
             + "(case when a.key is null then b.screen_name else a.screen_name end) as screen_name, "
-            + "(case when b.key is null then a.film_code else b.film_code end) as film_code, "
-            + "(case when b.key is null then a.film_name else b.film_name end) as film_name, "
+            + "(case when a.key is null then b.film_code else a.film_code end) as film_code, "
+            + "(case when a.key is null then b.film_name else a.film_name end) as film_name, "
             + "(case when a.key is null then b.session_code else a.session_code end) as session_code, "
             + "(case when a.key is null then b.session_datetime else a.session_datetime end) as session_datetime, "
             + "(case when b.key is null then a.local_sales_count else b.local_sales_count end) as local_sales_count, "
@@ -52,10 +52,13 @@ public class SqlTest {
             + "(case when a.key is null then b.film_version else a.film_version end) as film_version, "
             + "(case when a.key is null then b.film_type else a.film_type end) as film_type, "
             + "(case when a.key is null then b.film_introduction else a.film_introduction end) as film_introduction, "
+            + "(case when b.key is null then a.advance_sales_count else b.advance_sales_count end) as advance_sales_count, "
+            + "(case when b.key is null then a.advance_sales else b.advance_sales end) as advance_sales, "
             + "(case when b.key is null then a.local_service else b.local_service end) as local_service, "
             + "(case when b.key is null then a.service else b.service end) as service, "
             + "(case when b.key is null then a.report_time else b.report_time end) as report_time, "
             + "(case when a.key is null then b.business_date else a.business_date end) as business_date "
             + "from (select * from mtms_sdp where business_date = '%s') as a "
             + "full outer join (select * from mtms_smd where business_date = '%s') as b on a.key = b.key; ";
+
 }
