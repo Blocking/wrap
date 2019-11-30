@@ -13,6 +13,7 @@ import java.io.*;
 import java.net.URL;
 import java.security.*;
 import java.security.cert.CertificateException;
+import java.security.interfaces.RSAPublicKey;
 import java.util.TreeSet;
 
 /**
@@ -63,7 +64,40 @@ public class CipherTest {
 
     }
 
+    @Test
+    public void te() throws Exception {
+        final KeyPair keyPair = loadKeyStoreToKeyPair();
+        final String string = convertPublicKeyToString((RSAPublicKey) keyPair.getPublic());
+        System.out.println(string);
+        final byte[] bytes = string.getBytes();
+        for (int i = 0; i < bytes.length; i++) {
+            
+        }
+        System.out.println(bytes.length);
+//        final String s = Base64.encodeBase64String(encryptByPrivateKey(string.getBytes("utf-8"), keyPair.getPrivate()));
+//        System.out.println(s.length());
 
+    }
+    /**
+     * 加密<br>
+     * 用私钥加密
+     *
+     * @param data 数据
+     * @param privateKey 私钥
+     * @return
+     * @throws Exception
+     */
+    public static byte[] encryptByPrivateKey(final byte[] data, final PrivateKey privateKey)
+            throws Exception {
+        // 对数据加密
+        final Cipher cipher = Cipher.getInstance(privateKey.getAlgorithm());
+        cipher.init(Cipher.ENCRYPT_MODE, privateKey);
+        return cipher.doFinal(data);
+    }
+
+    private String convertPublicKeyToString(RSAPublicKey pk) {
+        return pk.getModulus().toString(16) + "|" + pk.getPublicExponent().toString(16);
+    }
 
     public KeyPair loadKeyStoreToKeyPair() throws KeyStoreException, IOException, CertificateException, NoSuchAlgorithmException, UnrecoverableEntryException {
         URL url = CipherTest.class.getResource("/certificate/vodt.pfx");
@@ -119,6 +153,8 @@ public class CipherTest {
     @Test
     public void verifySignature1() throws CertificateException, UnrecoverableEntryException, NoSuchAlgorithmException, KeyStoreException, IOException {
         KeyPair keyPair = loadKeyStoreToKeyPair();
+        System.out.println(keyPair.getPrivate().getAlgorithm());
+        System.out.println(keyPair.getPublic().getAlgorithm());
         String content = "天下无双战绩功成名就扬名立万";
         String signStr  = sign(content,keyPair.getPrivate());
         boolean isPass = verify(content,signStr,keyPair.getPublic());

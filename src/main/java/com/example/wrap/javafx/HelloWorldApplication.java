@@ -19,6 +19,7 @@ public class HelloWorldApplication extends Application {
         primaryStage.setScene(new Scene(label, 300, 250));
         primaryStage.setTitle("Hello World Application");
         primaryStage.show();
+
     }
 
     public static void main(String[] args) {
