@@ -8,6 +8,7 @@ import org.junit.Test;
 import org.springframework.util.Base64Utils;
 
 import java.io.*;
+import java.nio.Buffer;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 import java.time.DayOfWeek;
@@ -134,6 +135,23 @@ public class T {
     }
 
   }
+
+  @Test
+  public void testFile() throws IOException {
+      FileReader reader = new FileReader("D:\\tmp\\homework\\data\\area.txt");
+      LineNumberReader lineReader = new LineNumberReader(reader);
+
+    for (int i = 0; i <100 ; i++) {
+      lineReader.setLineNumber(1);
+      String s = lineReader.readLine();
+      System.out.println(lineReader.getLineNumber());
+      System.out.println(s);
+    }
+
+
+
+  }
+
 
 
 }
