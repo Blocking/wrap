@@ -1,9 +1,7 @@
-package com.example.wrap.concurrent.course;
+package com.example.wrap.course.concurrent;
 
 
 import lombok.extern.slf4j.Slf4j;
-
-import java.util.concurrent.TimeUnit;
 
 // 以下代码来源于【参考1】
 @Slf4j

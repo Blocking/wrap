@@ -1,6 +1,6 @@
-package com.example.wrap.concurrent.course;
+package com.example.wrap.course.concurrent;
 
-import lombok.SneakyThrows;
+import com.google.common.collect.Lists;
 import org.junit.Test;
 
 /**
@@ -10,7 +10,7 @@ public class Class1 {
     private static long count =0;
     private void add10K(){
         int idx = 0;
-        while (idx++ < 1_000_000_000 ){
+        while (idx++ < 10_000 ){
             count += 1 ;
         }
     }
@@ -25,9 +25,9 @@ public class Class1 {
         return count;
     }
 
-    @SneakyThrows
     @Test
-    public void testCalc(){
+    public void testCalc() throws InterruptedException {
+        System.out.println(calc());
     }
 
     public static void main(String[] args) throws InterruptedException {

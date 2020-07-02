@@ -23,8 +23,8 @@ import java.util.List;
 public class ExcelC {
 
 //    static Path path1 = Paths.get("D:\\tmp\\compare\\xufei\\1\\portal_channel_navigation.xlsx");
-    static Path path1 = Paths.get("D:\\tmp\\compare\\xufei\\1\\Portal_ChannelNavigation.xlsx");
-    static Path path2 = Paths.get("D:\\tmp\\compare\\xufei\\1\\Portal_ChannelNavigation.xlsx");
+    static Path path1 = Paths.get("D:\\tmp\\compare\\xufei\\2\\Portal_ChannelNavigation(2).xlsx");
+    static Path path2 = Paths.get("D:\\tmp\\compare\\xufei\\2\\portal_channel_navigation(2).xlsx");
 
     // Create a DataFormatter to format and get each cell's value as String
     static DataFormatter dataFormatter = new DataFormatter();
