@@ -1,4 +1,4 @@
-package com.example.wrap.DesignPatterns.two;
+package com.example.wrap.course.DesignPatterns.two;
 
 import java.io.File;
 import java.io.FileOutputStream;

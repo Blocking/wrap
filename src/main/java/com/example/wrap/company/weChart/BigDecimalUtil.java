@@ -3,6 +3,9 @@ package com.example.wrap.company.weChart;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
+/**
+ * @author zhangxiaoyu
+ */
 public class BigDecimalUtil {
 
     /**

@@ -12,9 +12,12 @@ import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
+import java.util.stream.LongStream;
 
 /**
  * Created by 12232 on 2017/12/22.
@@ -79,14 +82,18 @@ public class CompleteFutureDemo1 {
         CompletableFuture<Double> heightInCmFuture = CompletableFuture.supplyAsync(() -> {
             try {
                 log.info("height");
-                TimeUnit.SECONDS.sleep(1);
+                TimeUnit.SECONDS.sleep(2);
             } catch (InterruptedException e) {
                 throw new IllegalStateException(e);
             }
+            final int i = 23 / 0;
             return 177.8;
+        }).exceptionally(throwable -> {
+            System.out.println(throwable.getCause()); // returns a throwable back
+            return null;
         });
 
-        log.info("Calculating BMI.");
+   /*     log.info("Calculating BMI.");
         CompletableFuture<Double> combinedFuture = weightInKgFuture
                 .thenCombine(heightInCmFuture, (weightInKg, heightInCm) -> {
                     log.info("weight/height");
@@ -94,12 +101,26 @@ public class CompleteFutureDemo1 {
                     return weightInKg/(heightInMeter*heightInMeter);
                 });
 
-        log.info("Your BMI is - " + combinedFuture.get());
+        log.info("Your BMI is - " + combinedFuture.get());*/
+
+        final CompletableFuture<Void> voidCompletableFuture = CompletableFuture.allOf(weightInKgFuture, heightInCmFuture)
+                .exceptionally(throwable -> {
+                    System.out.println(throwable.getCause()); // returns a throwable back
+                    return null;
+                });
+
+        voidCompletableFuture.join();
+
+        System.out.println("weightInKgFuture:::"+weightInKgFuture.join());
+        System.out.println("heightInCmFuture:::"+heightInCmFuture.join());
+
     }
 
     @Test
     public void sample4(){
         //TODO 1. CompletableFuture.allOf（）
+
+        System.out.println(3/0);
     }
 
 

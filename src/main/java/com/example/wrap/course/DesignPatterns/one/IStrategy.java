@@ -1,4 +1,4 @@
-package com.example.wrap.DesignPatterns.one;
+package com.example.wrap.course.DesignPatterns.one;
 
 /**
  * Created by 12232 on 2017/10/11.

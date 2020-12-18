@@ -11,6 +11,8 @@ import org.apache.velocity.runtime.RuntimeConstants;
 import org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader;
 import org.junit.Test;
 
+import java.io.File;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.Arrays;
@@ -25,7 +27,7 @@ public class VelocityTest {
 
 
     @Test
-    public void test1() throws ClassNotFoundException {
+    public void test1() throws ClassNotFoundException, IOException {
         Class c = Class.forName("com.example.wrap.velocityTemplateEngine.User");
         Arrays.stream(c.getDeclaredFields()).forEach(field -> {
             System.out.println(field.getName());
@@ -40,6 +42,12 @@ public class VelocityTest {
         System.out.println(VelocityTest.class.getClassLoader().getResource(""));
         // path不能以'/'开头
         System.out.println(VelocityTest.class.getClassLoader().getResource("/"));
+
+        File directory = new File("");//设定为当前文件夹
+        System.out.println(directory.getCanonicalFile());//返回类型为File
+        System.out.println(directory.getCanonicalPath());//获取标准的路径  ，返回类型为String
+        System.out.println(directory.getAbsoluteFile());//返回类型为File
+        System.out.println(directory.getAbsolutePath()+"/src/main/java/"+c.getCanonicalName().replace(".","/")+".java");//获取绝对路径，返回类型为String
     }
 
     Stream<String> templates = Stream.of(
@@ -103,7 +111,7 @@ public class VelocityTest {
 
     }
 
-    private static void merge(Template template, VelocityContext ctx, String path) {
+    public static void merge(Template template, VelocityContext ctx, String path) {
 
         try(PrintWriter writer =new PrintWriter(path)){
             template.merge(ctx, writer);

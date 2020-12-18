@@ -33,7 +33,7 @@
                 <form id="form" name="form" class="form-horizontal" novalidate>
                     <div class="form-body">
                         #foreach($field in $fields)
-#if($velocityCount%2==1)<div class="row">#end
+                        #if($velocityCount%2==1)<div class="row">#end
 
                              <div class="col-md-6" ng-class="{ 'has-error' :(form.$field.$touched || form.$submitted ) && form.$field.$invalid}">
                                 <div class="form-group">
